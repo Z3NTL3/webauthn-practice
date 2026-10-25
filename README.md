@@ -1,4 +1,5 @@
 ### WebAuthn Demo
+> I will add a Docker compose setup on 26th October
 
 This is a crude WebAuthn demo intended for mere experimenting with the APIs. One random weekend I thought myself to implement passkeys via WebAuthn, I read the WebAuthn guide & documentation, went over some of the spec details after which I studied the WebAuthn browser APIs and Go backend interface. This project is the result of that journey.
 
