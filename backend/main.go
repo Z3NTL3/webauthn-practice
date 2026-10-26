@@ -59,5 +59,5 @@ func main() {
 	mux.HandleFunc("POST /login/finalize", handlers.LoginFinalize)
 
 	log.Info("Ready", "URL", backend_url)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", viper.GetString("BACKEND_PORT")), middleware.Logger(middleware.CORS(frontend_url, mux))))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", viper.GetString("BACKEND_PORT")), middleware.LimitReqBody(middleware.Logger(middleware.CORS(frontend_url, mux)))))
 }
