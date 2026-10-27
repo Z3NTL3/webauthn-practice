@@ -10,7 +10,7 @@ It was fun thing to do.
 No AI was used for the software implementation. It is only used for visuals in the Figma design file.
 
 #### Stack
-- Go backend built on ``net/http`` with official WebAuthn pkg 
+- Go backend built on ``net/http`` with WebAuthn pkg 
 - React Router frontend with Tailwindcss
 
 #### Setup

@@ -7,5 +7,5 @@ export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), svgr()],
   resolve: {
     tsconfigPaths: true,
-  },
+  }
 });
