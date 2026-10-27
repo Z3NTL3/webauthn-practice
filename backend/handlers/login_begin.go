@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	"charm.land/log/v2"
@@ -18,14 +17,7 @@ func LoginBegin(res http.ResponseWriter, req *http.Request) {
 	STORAGE := globals.STORAGE
 
 	var email string
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		utils.Fail(res, http.StatusInternalServerError, "failed reading response body")
-		return
-	}
-
-	err = json.Unmarshal(body, &email)
-	if err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&email); err != nil {
 		utils.Fail(res, http.StatusBadRequest, "bad request")
 		return
 	}
@@ -54,7 +46,7 @@ func LoginBegin(res http.ResponseWriter, req *http.Request) {
 	}
 
 	userModel := new(models.User)
-	if err = json.Unmarshal(rawUserData, userModel); err != nil {
+	if err := json.Unmarshal(rawUserData, userModel); err != nil {
 		utils.Fail(res, http.StatusInternalServerError, "failed unmarshalling raw data to user")
 		return
 	}

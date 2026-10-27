@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/base64"
 	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/go-webauthn/webauthn/protocol"
@@ -22,14 +21,8 @@ func LoginFinalize(res http.ResponseWriter, req *http.Request) {
 		Assertion json.RawMessage `json:"assertion"`
 	}
 
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		utils.Fail(res, http.StatusBadRequest, "bad request body")
-		return
-	}
-
 	var schema ReqBodySchema
-	if err := json.Unmarshal(body, &schema); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&schema); err != nil {
 		utils.Fail(res, http.StatusInternalServerError, "failed unmarshalling body")
 		return
 	}
@@ -73,13 +66,13 @@ func LoginFinalize(res http.ResponseWriter, req *http.Request) {
 	}
 
 	parsed, err := protocol.ParseCredentialRequestResponseBytes(schema.Assertion)
-	if err := json.Unmarshal(sessRawData, sessData); err != nil {
+	if err = json.Unmarshal(sessRawData, sessData); err != nil {
 		utils.Fail(res, http.StatusInternalServerError, "failed parsing credential response from client")
 		return
 	}
 
 	credential, err := webauth.ValidateLogin(userModel, *sessData, parsed)
-	if err := json.Unmarshal(sessRawData, sessData); err != nil {
+	if err = json.Unmarshal(sessRawData, sessData); err != nil {
 		utils.Fail(res, http.StatusBadRequest, err.Error())
 		return
 	}

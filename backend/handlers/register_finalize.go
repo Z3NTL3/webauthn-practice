@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/go-webauthn/webauthn/protocol"
@@ -21,14 +20,8 @@ func RegisterFinalize(res http.ResponseWriter, req *http.Request) {
 		Credential json.RawMessage `json:"credential"`
 	}
 
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		utils.Fail(res, http.StatusBadRequest, "bad request body")
-		return
-	}
-
 	var schema ReqBodySchema
-	if err := json.Unmarshal(body, &schema); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&schema); err != nil {
 		utils.Fail(res, http.StatusInternalServerError, "failed unmarshalling body")
 		return
 	}
@@ -64,7 +57,7 @@ func RegisterFinalize(res http.ResponseWriter, req *http.Request) {
 	}
 
 	userModel := new(models.User)
-	err = json.Unmarshal(user_, userModel)
+	err := json.Unmarshal(user_, userModel)
 	if err != nil {
 		utils.Fail(res, http.StatusInternalServerError, "failed unmarshalling user to model")
 		return

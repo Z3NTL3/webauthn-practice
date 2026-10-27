@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/go-webauthn/webauthn/protocol"
@@ -17,14 +16,9 @@ func RegisterCreateOptions(res http.ResponseWriter, req *http.Request) {
 	webauth := globals.WEBAUTH
 	STORAGE := globals.STORAGE
 
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		utils.Fail(res, http.StatusBadRequest, "bad request body")
-		return
-	}
-
 	data := map[string]string{}
-	if err := json.Unmarshal(body, &data); err != nil {
+	err := json.NewDecoder(req.Body).Decode(&data)
+	if err != nil {
 		utils.Fail(res, http.StatusBadRequest, "bad request body")
 		return
 	}
