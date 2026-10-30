@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/go-webauthn/webauthn/webauthn"
+	"github.com/spf13/viper"
 )
 
 var WEBAUTH *webauthn.WebAuthn
@@ -17,7 +18,7 @@ func init() {
 	config := &webauthn.Config{
 		RPDisplayName: "Localhost",
 		RPID:          "localhost",
-		RPOrigins:     []string{"http://localhost:5173"},
+		RPOrigins:     []string{viper.GetString("FRONTEND_PORT")},
 	}
 
 	webauth, err := webauthn.New(config)
